@@ -1,8 +1,9 @@
-// import { createApp } from './vendor/vue.esm-browser.js';
+import { createApp } from './vendor/vue.esm-browser.js';
+
 
 // From https://jsonplaceholder.typicode.com/comments
 const emails = [
-  'Eliseo@gardner.biz',
+  'Elisao@gardnir.biz',
   'Jayne_Kuhic@sydney.com',
   'Nikita@garfield.biz',
   'Lew@alysha.tv',
@@ -30,3 +31,30 @@ const emails = [
 ];
 
 // Требуется создать Vue приложение
+
+const App = createApp({
+	name: 'filtered-list-emails',
+	data() {
+		return {
+			emails,
+			search: ''
+		}
+	},
+	computed: {
+		findItem(){
+			return this.emails.map(i => {
+				const item = {
+					email: i,
+					marked: false
+				}
+
+				if (this.search === '') return item
+
+				if (i.toLowerCase().indexOf(this.search.toLowerCase()) > -1) {
+					item.marked = true
+				}
+				return item
+			})
+		}
+	}
+}).mount('#app')
