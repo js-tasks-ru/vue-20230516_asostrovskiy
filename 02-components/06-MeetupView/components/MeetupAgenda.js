@@ -5,14 +5,14 @@ export default defineComponent({
   name: 'MeetupAgenda',
 
   components: {
-	MeetupAgendaItem
-	},
+    MeetupAgendaItem,
+  },
 
   props: {
-	agenda: {
-		type: Array,
-		required: true
-	}
+    agenda: {
+      type: Array,
+      required: true,
+    },
   },
 
   template: `
@@ -20,6 +20,5 @@ export default defineComponent({
       <li v-for="item in agenda" :key='item.id' class="agenda__item">
         <MeetupAgendaItem :agendaItem='item' />
       </li>
-	  <UiAlert> Программа пока пуста... </UiAlert>
     </ul>`,
 });

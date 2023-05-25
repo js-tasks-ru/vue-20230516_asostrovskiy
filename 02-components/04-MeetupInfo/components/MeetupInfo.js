@@ -3,33 +3,33 @@ import { defineComponent } from '../vendor/vue.esm-browser.js';
 export default defineComponent({
   name: 'MeetupInfo',
 
-	props: {
-		organizer: {
-			type: String,
-			required: true
-		},
-		place: {
-			type: String,
-			required: true
-		},
-		date: {
-			type: Number,
-			required: true
-		}
-	},
+  props: {
+    organizer: {
+      type: String,
+      required: true,
+    },
+    place: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Number,
+      required: true,
+    },
+  },
 
-	computed: {
-		dateForShow(){
-			return new Date(this.date).toLocaleDateString(navigator.language, {
-				day: 'numeric',
-				month: 'long',
-				year: 'numeric',
-			})
-		},
-		dateForAttr(){
-			return new Date(this.date).toISOString().split('T')[0]
-		}
-	},
+  computed: {
+    dateForShow() {
+      return new Date(this.date).toLocaleDateString(navigator.language, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+    },
+    dateForAttr() {
+      return new Date(this.date).toISOString().split('T')[0];
+    },
+  },
 
   template: `
     <ul class="meetup-info">

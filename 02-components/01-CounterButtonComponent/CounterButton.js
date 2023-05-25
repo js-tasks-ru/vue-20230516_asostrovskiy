@@ -4,12 +4,14 @@ export default defineComponent({
   name: 'CounterButton',
 
   props: {
-	count: {
-		type: Number,
-		required: true,
-		default: 0
-	}
+    count: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
+
+  emits: ['update:count'],
 
   // Компонент должен иметь входной параметр и порождать событие
 

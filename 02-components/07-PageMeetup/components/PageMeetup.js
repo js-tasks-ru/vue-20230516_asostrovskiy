@@ -10,35 +10,35 @@ export default defineComponent({
   components: {
     UiAlert,
     UiContainer,
-	MeetupView,
+    MeetupView,
   },
 
   props: {
-	meetupId: {
-		type: Number,
-		required: true,
-	},
+    meetupId: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {
-	return {
-		meetup: null,
-		error: null
-	}
+    return {
+      meetup: null,
+      error: null,
+    };
   },
 
- watch: {
-	meetupId: {
-		immediate: true,
-		handler(newV){
-			this.error = null
-			this.meetup = null
-			fetchMeetupById(newV)
-				.then(resp =>  this.meetup = resp )
-				.catch(e => this.error = e.message)
-			}
-		}
-},
+  watch: {
+    meetupId: {
+      immediate: true,
+      handler(newV) {
+        this.error = null;
+        this.meetup = null;
+        fetchMeetupById(newV)
+          .then((resp) => (this.meetup = resp))
+          .catch((e) => (this.error = e.message));
+      },
+    },
+  },
 
   template: `
     <div class="page-meetup">

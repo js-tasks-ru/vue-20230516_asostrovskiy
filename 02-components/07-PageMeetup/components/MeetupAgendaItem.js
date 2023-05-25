@@ -8,10 +8,10 @@ export default defineComponent({
   agendaItemDefaultTitles,
 
   props: {
-	agendaItem: {
-		type: Object,
-		required: true
-	}
+    agendaItem: {
+      type: Object,
+      required: true,
+    },
   },
 
   template: `
