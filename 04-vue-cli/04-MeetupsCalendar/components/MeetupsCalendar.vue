@@ -17,7 +17,7 @@
       	<div v-for="i in quantityDaysInCurrentMonth" :key="i" class="calendar-view__cell" tabindex="0">
 			<div class="calendar-view__cell-day">{{ i }}</div>
 			<div class="calendar-view__cell-content">
-				<!-- // вопрос оптимальности массива через метод mettups(i)??? (см след. строчку)  может есть лучше решения -->
+				<!-- // вопрос оптимальности массива через метод mettups(i)??? (см след. строчку)  может есть лучше решения? -->
 				<a v-for="meetup in mettups(i) " :key="meetup.id" :href="'/meetups/' + meetup.id" class="calendar-event">
 					{{ meetup.title }}
 				</a>
@@ -46,7 +46,7 @@ export default {
   },
   data() {
 	return {
-		date: new Date()
+		date: new Date(),
 	}
   },
 
@@ -56,6 +56,10 @@ export default {
 			month: 'long',
 			year: 'numeric',
 		});
+	},
+	todayIsLastDayInMonth() {
+		const today = new Date()
+		return today.getDate() === new Date(today.getFullYear(), today.getMonth()+1, 0).getDate()
 	},
 	quantityDaysInLastMonth() {
 		return new Date(this.date.getFullYear(), this.date.getMonth(), 0).getDate()
@@ -79,7 +83,8 @@ export default {
 	},
 	datesNextMonth() {   // вопрос оптимальности???  может есть лучше решения
 		const sumDays = this.datesLastMonth?.length + this.quantityDaysInCurrentMonth
-		if (sumDays <= 35) return 35 - sumDays
+		if (this.datesLastMonth?.length + this.quantityDaysInCurrentMonth === 28) return 0
+		else if (sumDays <= 35) return 35 - sumDays
 		else return 42 - sumDays
 	},
 	meetupsInCurrentMonth(){
@@ -90,11 +95,20 @@ export default {
 	},
   },
   methods: {
-	changeNextMonth() {
-		this.date = new Date(this.date.setMonth(this.date.getMonth() + 1))
-	},
 	changeLastMonth() {
-		this.date = new Date(this.date.setMonth(this.date.getMonth() - 1))
+		// сомневаюсь что верно понял результаты теста
+		if(this.todayIsLastDayInMonth) {
+			this.date = new Date(this.date.setDate(0))
+		}
+		else this.date = new Date(this.date.getFullYear(), this.date.getMonth()-1, this.date.getDate())
+	},
+	changeNextMonth() {
+		if(this.todayIsLastDayInMonth) {  // не работает, если написать this.date = new Date(this.date.setDate(this.date.getDate() + this.quantityDaysInNextMonth))
+			const fff = new Date(this.date.setDate(this.date.getDate() + this.quantityDaysInNextMonth))
+			this.date = fff
+		}
+		else this.date = new Date(this.date.setMonth(this.date.getMonth() + 1))
+
 	},
 	mettups(day) {
 		const meetups = []
@@ -103,7 +117,7 @@ export default {
 			if(day === date.getDate())  meetups.push(this.meetupsInCurrentMonth[index])
 		}
 		return meetups
-	}
+	},
   },
 };
 </script>
