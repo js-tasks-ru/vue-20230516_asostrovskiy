@@ -1,13 +1,13 @@
 <template>
-  <div class="toasts">
-	<UiTransitionGroupFade>
-		<div v-for="t in toastList" :key="t.id" class="toast" :class="t.class">
-			<UiIcon v-if="showClose" class="toast__close" icon="chevron-down" @click="closeToast(t.id)" />
-			<UiIcon class="toast__icon" :icon="t.icon" />
-			<span>{{ t.text }}</span>
-		</div>
-	</UiTransitionGroupFade>
-  </div>
+	<div class="toasts">
+		<UiTransitionGroupFade>
+			<div v-for="t in toastList" :key="t.id" class="toast" :class="t.class">
+				<UiIcon v-if="showClose" class="toast__close" icon="chevron-down" @click="closeToast(t.id)" />
+				<UiIcon class="toast__icon" :icon="t.icon" />
+				<span>{{ t.text }}</span>
+			</div>
+		</UiTransitionGroupFade>
+  	</div>
 </template>
 
 <script>
@@ -15,8 +15,8 @@ import UiIcon from './UiIcon.vue';
 import UiTransitionGroupFade from './UiTransitionGroupFade.vue'
 
 export default {
-  name: 'TheToaster',
-  props: {
+	name: 'TheToaster',
+	props: {
 	showClose: Boolean,
 	delay: {
 		type: Number,
@@ -24,40 +24,44 @@ export default {
 	}
   },
 
-  data() {
-	return {
-		toastList: [],
+	data() {
+		return {
+			toastList: [],
 	}
   },
-  components: { UiIcon, UiTransitionGroupFade },
+  	components: { UiIcon, UiTransitionGroupFade },
 
-  methods: {
-	closeToast(id) {
-		this.toastList = this.toastList.filter(el => el.id != id)
-	},
+  	methods: {
+		closeToast(id) {
+			this.toastList = this.toastList.filter(el => el.id != id)
+		},
 
-	delayDeleteToast() {
-		setTimeout(() => this.toastList.shift(), this.delay)
+	delayDeleteToast(tostId) {
+		setTimeout(() =>
+			this.toastList = this.toastList.filter(el => el.id != tostId), this.delay
+		)
 	},
 
 	success(text) {
-		this.toastList.push({
-			id: new Date(),
+		const newTost = {
+			id: 'success' + new Date(),
 			text,
 			class: 'toast_success',
 			icon: 'check-circle',
-		})
-		this.delayDeleteToast()
+		}
+		this.toastList.push(newTost)
+		this.delayDeleteToast(newTost.id)
 	},
 
 	error(text) {
-		this.toastList.push({
-			id: new Date(),
+		const newTost = {
+			id: 'error' + new Date(),
 			text,
 			class: 'toast_error',
 			icon: 'alert-circle',
-		})
-		this.delayDeleteToast()
+		}
+		this.toastList.push(newTost)
+		this.delayDeleteToast(newTost.id)
 	}
   }
 };
