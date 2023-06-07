@@ -1,33 +1,33 @@
 <template>
 	<div
-	  class="dropdown"
-	  :class="{'dropdown_opened':viewOptions}"
-	  @click="viewOptions = !viewOptions"
+		class="dropdown"
+		:class="{'dropdown_opened':viewOptions}"
+		@click="viewOptions = !viewOptions"
 	>
     <button
-	  type="button"
-	  class="dropdown__toggle"
-	  :class="{'dropdown__toggle_icon': optionHaveIcon}"
+		type="button"
+		class="dropdown__toggle"
+		:class="{'dropdown__toggle_icon': optionHaveIcon}"
 	>
 	<UiIcon
-	  v-if='currentOptions?.icon'
-	  :icon="currentOptions.icon"
-	  class="dropdown__icon"
+		v-if='currentOptions?.icon'
+		:icon="currentOptions.icon"
+		class="dropdown__icon"
 	/>
     	<span>{{ currentOptions ? currentOptions.text : title }}</span>
     </button>
 
     <div
-	  v-show='viewOptions'
-	  class="dropdown__menu"
-	  @click.stop="viewOptions = false"
-	  role="listbox"
+		v-show='viewOptions'
+		class="dropdown__menu"
+		@click.stop="viewOptions = false"
+		role="listbox"
 	>
     	<button
 			v-for="o in options"
 			:key="o.value"
 			class="dropdown__item"
-			:class="optionHaveIcon ? 'dropdown__item_icon' : 'dropdown__toggle_icon'"
+			:class=" {'dropdown__item_icon' : optionHaveIcon }"
 			role="option"
 			type="button"
 			@click="changeOption(o)"
@@ -43,9 +43,9 @@
 import UiIcon from './UiIcon.vue';
 
 export default {
-  name: 'UiDropdown',
-  components: { UiIcon },
-  props: {
+	name: 'UiDropdown',
+	components: { UiIcon },
+	props: {
 	options: {
 		type: Array,
 		required: true
@@ -57,26 +57,26 @@ export default {
 		default: 'default'
 	}
   },
-  data() {
-	return {
-		viewOptions: false,
-	}
-  },
-  emits: ['update:modelValue'],
-  computed: {
-	currentOptions() {
-		if(this.modelValue) return this.options.find(i => i.value === this.modelValue)
-		return null
+	data() {
+		return {
+			viewOptions: false,
+		}
 	},
-	optionHaveIcon() {
-		return this.options.find(i=> i.icon)
+	emits: ['update:modelValue'],
+	computed: {
+		currentOptions() {
+			if(this.modelValue) return this.options.find(i => i.value === this.modelValue)
+			return null
+		},
+		optionHaveIcon() {
+			return this.options.find(i=> i.icon)
+		}
+	},
+	methods: {
+		changeOption(option) {
+			this.$emit('update:modelValue', option.value)
+		}
 	}
-  },
-  methods: {
-  	changeOption(option) {
-		this.$emit('update:modelValue', option.value)
-	}
-  }
 }
 </script>
 
