@@ -14,13 +14,15 @@
 			<div class="calendar-view__cell-content"></div>
 		</div>
 
-      	<div v-for="i in quantityDaysInCurrentMonth" :key="i" class="calendar-view__cell" tabindex="0">
-			<div class="calendar-view__cell-day">{{ i }}</div>
+      	<div v-for="date in quantityDaysInCurrentMonth" :key="date" class="calendar-view__cell" tabindex="0">
+			<div class="calendar-view__cell-day">{{ date }}</div>
 			<div class="calendar-view__cell-content">
 				<!-- // вопрос оптимальности массива через метод mettups(i)??? (см след. строчку)  может есть лучше решения? -->
-				<a v-for="meetup in mettups(i) " :key="meetup.id" :href="'/meetups/' + meetup.id" class="calendar-event">
-					{{ meetup.title }}
-				</a>
+				<template v-if="meetupsByDay[date]">
+					<a v-for="meetup in meetupsByDay[date]" :key="meetup.id" :href="'/meetups/' + meetup.id" class="calendar-event">
+						{{ meetup.title }}
+					</a>
+				</template>
 			</div>
       	</div>
 
@@ -36,89 +38,80 @@
 
 <script>
 export default {
-  name: 'MeetupsCalendar',
+	name: 'MeetupsCalendar',
 
-  props: {
-    meetups: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-	return {
-		date: new Date(),
-	}
-  },
+	props: {
+		meetups: {
+		type: Array,
+		required: true,
+		},
+	},
+	data() {
+		return {
+			date: new Date(new Date().setDate(15)),
+		}
+	},
 
-  computed: {
-	currentMonthYear() {
-		return this.date.toLocaleDateString(navigator.language, {
-			month: 'long',
-			year: 'numeric',
-		});
-	},
-	todayIsLastDayInMonth() {
-		const today = new Date()
-		return today.getDate() === new Date(today.getFullYear(), today.getMonth()+1, 0).getDate()
-	},
-	quantityDaysInLastMonth() {
-		return new Date(this.date.getFullYear(), this.date.getMonth(), 0).getDate()
-	},
-	quantityDaysInCurrentMonth() {
-		return new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate()
-	},
-	quantityDaysInNextMonth() {
-		return new Date(this.date.getFullYear(), this.date.getMonth() + 2, 0).getDate()
-	},
-	firstDayInMonth() {
-		return new Date(this.date.getFullYear(), this.date.getMonth(), 1).getDay()
-	},
-	datesLastMonth() {
-		const dates = []
-		const startDate = this.quantityDaysInLastMonth - this.firstDayInMonth + 2
-		for (let index = startDate; index < this.quantityDaysInLastMonth + 1 ; index++) {
-			dates.push(index)
+	computed: {
+		currentMonthYear() {
+			return this.date.toLocaleDateString(navigator.language, {
+				month: 'long',
+				year: 'numeric',
+			});
+		},
+		quantityDaysInLastMonth() {
+			return new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), 0).getDate()
+		},
+		quantityDaysInCurrentMonth() {
+			return new Date(this.date.getUTCFullYear(), this.date.getUTCMonth() + 1, 0).getDate()
+		},
+		quantityDaysInNextMonth() {
+			return new Date(this.date.getUTCFullYear(), this.date.getUTCMonth() + 2, 0).getDate()
+		},
+		firstDayInMonth() {
+			return new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), 1).getDay()
+		},
+		datesLastMonth() {
+			const dates = []
+			const startDate = this.quantityDaysInLastMonth - this.firstDayInMonth + 2
+			for (let index = startDate; index < this.quantityDaysInLastMonth + 1 ; index++) {
+				dates.push(index)
+			}
+			return dates
+		},
+		datesNextMonth() {   // вопрос оптимальности???  может есть лучше решения
+			const sumDays = this.datesLastMonth?.length + this.quantityDaysInCurrentMonth
+			if (this.datesLastMonth?.length + this.quantityDaysInCurrentMonth === 28) return 0
+			else if (sumDays <= 35) return 35 - sumDays
+			else return 42 - sumDays
+		},
+		meetupsInCurrentMonth(){
+			return this.meetups.filter(el => {
+				return	new Date(el.date).getUTCMonth() === this.date.getUTCMonth() &&
+						new Date(el.date).getUTCFullYear() === this.date.getUTCFullYear()
+			})
+		},
+		meetupsByDay() {
+			const meetups = {}
+			for (let i = 0; i < this.meetupsInCurrentMonth.length; i++) {
+				const dateMeetup = new Date (this.meetupsInCurrentMonth[i].date).getDate()
+				if (meetups[dateMeetup]) {
+					meetups[dateMeetup].push(this.meetupsInCurrentMonth[i])
+				}
+				else meetups[dateMeetup] = [this.meetupsInCurrentMonth[i]]
+			}
+			return meetups
 		}
-		return dates
-	},
-	datesNextMonth() {   // вопрос оптимальности???  может есть лучше решения
-		const sumDays = this.datesLastMonth?.length + this.quantityDaysInCurrentMonth
-		if (this.datesLastMonth?.length + this.quantityDaysInCurrentMonth === 28) return 0
-		else if (sumDays <= 35) return 35 - sumDays
-		else return 42 - sumDays
-	},
-	meetupsInCurrentMonth(){
-		return this.meetups.filter(el => {
-			return	new Date(el.date).getMonth() === this.date.getMonth() &&
-					new Date(el.date).getFullYear() === this.date.getFullYear()
-		})
-	},
-  },
-  methods: {
-	changeLastMonth() {
-		// сомневаюсь что верно понял результаты теста
-		if(this.todayIsLastDayInMonth) {
-			this.date = new Date(this.date.setDate(0))
-		}
-		else this.date = new Date(this.date.getFullYear(), this.date.getMonth()-1, this.date.getDate())
-	},
-	changeNextMonth() {
-		if(this.todayIsLastDayInMonth) {  // не работает, если написать this.date = new Date(this.date.setDate(this.date.getDate() + this.quantityDaysInNextMonth))
-			const fff = new Date(this.date.setDate(this.date.getDate() + this.quantityDaysInNextMonth))
-			this.date = fff
-		}
-		else this.date = new Date(this.date.setMonth(this.date.getMonth() + 1))
 
 	},
-	mettups(day) {
-		const meetups = []
-		for (let index = 0; index < this.meetupsInCurrentMonth.length; index++) {
-			const date = new Date(this.meetupsInCurrentMonth[index].date)
-			if(day === date.getDate())  meetups.push(this.meetupsInCurrentMonth[index])
-		}
-		return meetups
+	methods: {
+		changeLastMonth() {
+			this.date = new Date(this.date.setMonth(this.date.getUTCMonth() - 1))
+		},
+		changeNextMonth() {
+			this.date = new Date(this.date.setMonth(this.date.getUTCMonth() + 1))
+		},
 	},
-  },
 };
 </script>
 
