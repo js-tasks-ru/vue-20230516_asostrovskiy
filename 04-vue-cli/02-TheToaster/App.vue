@@ -1,5 +1,5 @@
 <template>
-  <TheToaster ref="toaster" />
+  <TheToaster ref="toaster" showClose delay="3000" />
   <p>
     <button type="button" @click="handleSuccessClick">Add Success Message</button>
     <button type="button" @click="handleErrorClick">Add Error Message</button>

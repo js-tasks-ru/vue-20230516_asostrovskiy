@@ -1,24 +1,69 @@
 <template>
-  <div class="toasts">
-    <div class="toast toast_success">
-      <UiIcon class="toast__icon" icon="check-circle" />
-      <span>Success Toast Example</span>
-    </div>
-
-    <div class="toast toast_error">
-      <UiIcon class="toast__icon" icon="alert-circle" />
-      <span>Error Toast Example</span>
-    </div>
-  </div>
+	<div class="toasts">
+		<UiTransitionGroupFade>
+			<div v-for="t in toastList" :key="t.id" class="toast" :class="t.class">
+				<UiIcon v-if="showClose" class="toast__close" icon="chevron-down" @click="closeToast(t.id)" />
+				<UiIcon class="toast__icon" :icon="t.icon" />
+				<span>{{ t.text }}</span>
+			</div>
+		</UiTransitionGroupFade>
+  	</div>
 </template>
 
 <script>
 import UiIcon from './UiIcon.vue';
+import UiTransitionGroupFade from './UiTransitionGroupFade.vue'
 
 export default {
-  name: 'TheToaster',
+	name: 'TheToaster',
+	props: {
+	showClose: Boolean,
+	delay: {
+		type: Number,
+		default: 5000
+	}
+  },
 
-  components: { UiIcon },
+	data() {
+		return {
+			toastList: [],
+	}
+  },
+  	components: { UiIcon, UiTransitionGroupFade },
+
+  	methods: {
+		closeToast(id) {
+			this.toastList = this.toastList.filter(el => el.id != id)
+		},
+
+	delayDeleteToast(tostId) {
+		setTimeout(() =>
+			this.toastList = this.toastList.filter(el => el.id != tostId), this.delay
+		)
+	},
+
+	success(text) {
+		const newTost = {
+			id: 'success' + new Date(),
+			text,
+			class: 'toast_success',
+			icon: 'check-circle',
+		}
+		this.toastList.push(newTost)
+		this.delayDeleteToast(newTost.id)
+	},
+
+	error(text) {
+		const newTost = {
+			id: 'error' + new Date(),
+			text,
+			class: 'toast_error',
+			icon: 'alert-circle',
+		}
+		this.toastList.push(newTost)
+		this.delayDeleteToast(newTost.id)
+	}
+  }
 };
 </script>
 
@@ -53,10 +98,22 @@ export default {
   font-size: 18px;
   line-height: 28px;
   width: auto;
+  position: relative;
 }
 
 .toast + .toast {
   margin-top: 20px;
+}
+
+.toast__close {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: 15px;
+    height: 15px;
+	cursor: pointer;
+	border-radius: 50%;
+	background-color: var(--grey-2);
 }
 
 .toast__icon {
