@@ -51,10 +51,7 @@ router.beforeEach((to, from) => {
 	if (to.meta?.requireGuest && !isAuthenticated()) return true
 
 	if (to.meta?.requireAuth && isAuthenticated())  return true
-	if (to.meta?.requireAuth && !isAuthenticated()) {
-		console.log(from.path)
-		return { name: 'login', query: {from: to.path} }
-	}
+	if (to.meta?.requireAuth && !isAuthenticated()) return { name: 'login', query: {from: to.path} }
 
 	return true }
 )
