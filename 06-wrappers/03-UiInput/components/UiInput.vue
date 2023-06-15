@@ -24,8 +24,8 @@
             :class="[{ 'form-control_sm': small }, { 'form-control_rounded': rounded }]"
         />
 
-        <div class="input-group__icon">
-            <slot name="right-icon" v-if="$slots['right-icon']" />
+        <div class="input-group__icon" v-if="$slots['right-icon']">
+            <slot name="right-icon" />
         </div>
     </div>
 </template>
