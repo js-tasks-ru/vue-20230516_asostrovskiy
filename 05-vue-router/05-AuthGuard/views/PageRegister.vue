@@ -1,10 +1,10 @@
 <template>
-  <div>PageRegister - только для гостей</div>
+    <div>PageRegister - только для гостей</div>
 </template>
 
 <script>
 export default {
-  name: 'PageLogin',
+    name: "PageLogin"
 };
 </script>
 

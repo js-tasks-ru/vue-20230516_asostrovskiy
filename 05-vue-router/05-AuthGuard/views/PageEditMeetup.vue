@@ -1,10 +1,10 @@
 <template>
-  <div>PageEditMeetup - только для авторизованных пользователей</div>
+    <div>PageEditMeetup - только для авторизованных пользователей</div>
 </template>
 
 <script>
 export default {
-  name: 'PageEditMeetup',
+    name: "PageEditMeetup"
 };
 </script>
 
