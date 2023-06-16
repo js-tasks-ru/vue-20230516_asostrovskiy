@@ -1,4 +1,5 @@
 <template>
+
   <div class="sample container">
     <h2>Boolean</h2>
     <p>
@@ -6,7 +7,7 @@
     </p>
     <p><button @click="checked = !checked">Update Bool</button></p>
 
-    <h2>Array</h2>
+     <h2>Array</h2>
     <p>Checked Array: {{ checkedArray }}</p>
     <p><UiCheckbox v-model="checkedArray" value="A" name="array-example">Check A</UiCheckbox></p>
     <p><UiCheckbox v-model="checkedArray" value="B" name="array-example">Check B</UiCheckbox></p>
