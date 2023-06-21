@@ -122,9 +122,7 @@ export default {
       localMeetup: JSON.parse(JSON.stringify(this.meetup)),
     };
   },
-
   emits: ['submit', 'cancel'],
-
   methods: {
     submitMeetup() {
       this.$emit('submit', JSON.parse(JSON.stringify(this.localMeetup)));
