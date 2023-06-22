@@ -12,7 +12,6 @@ import SensorsDataRow from './SensorsDataRow';
 
 export default {
   name: 'SensorsDataView',
-
   components: { SensorsDataRow },
 
   data() {
@@ -27,7 +26,7 @@ export default {
 
     // Раз в секунду запрашиваем и выводим новые данные сенсоров
     setInterval(() => {
-      this.sensors = this.sensorsDataController.getData();
+      this.sensorsDataController.getData();
     }, 1000);
   },
 
@@ -42,7 +41,7 @@ export default {
     },
 
     setData(sensors) {
-      this.sensors = sensors;
+      this.sensors = JSON.parse(JSON.stringify(sensors)) ;
     },
   },
 };
