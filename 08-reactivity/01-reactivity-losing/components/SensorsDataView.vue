@@ -12,7 +12,6 @@ import SensorsDataRow from './SensorsDataRow';
 
 export default {
   name: 'SensorsDataView',
-
   components: { SensorsDataRow },
 
   data() {
@@ -42,7 +41,7 @@ export default {
     },
 
     setData(sensors) {
-      this.sensors = sensors;
+      this.sensors = JSON.parse(JSON.stringify(sensors)) ;
     },
   },
 };
