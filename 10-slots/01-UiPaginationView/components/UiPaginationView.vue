@@ -1,5 +1,9 @@
 <template>
   <div class="pagination-container">
+    <template v-for="i in viewArray" :key="i">
+      <slot :item="i" />
+    </template>
+
     <!-- Контент страницы -->
   </div>
 </template>
@@ -24,6 +28,16 @@ export default {
     items: {
       type: Array,
       required: true,
+    },
+  },
+
+  computed: {
+	startForSlice() {
+		if (!this.page) return 0
+		return (this.page-1)*this.perPage
+	},
+    viewArray() {
+      return this.items.slice(this.startForSlice, this.startForSlice + this.perPage);
     },
   },
 };
